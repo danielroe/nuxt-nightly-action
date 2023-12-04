@@ -4,7 +4,8 @@
   "description": "An action to test a repository against the latest nightly build of Nuxt.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/index.ts -o dist"
+    "build": "ncc build src/index.ts -o dist",
+    "release": "bumpp"
   },
   "keywords": [],
   "author": "",
