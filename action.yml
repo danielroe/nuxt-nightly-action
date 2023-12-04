@@ -9,6 +9,7 @@ branding:
 
 inputs:
   base:
+    required: false
   head:
     default: ci/nuxt-nightly
 
