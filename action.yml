@@ -5,6 +5,7 @@ author: 'Daniel Roe'
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
   icon: 'moon'
+  color: 'black'
 
 runs:
   using: node20
