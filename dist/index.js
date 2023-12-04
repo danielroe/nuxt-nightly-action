@@ -30805,17 +30805,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const node_child_process_1 = __nccwpck_require__(7718);
 const core_1 = __nccwpck_require__(9093);
 const github_1 = __nccwpck_require__(5942);
-// TODO: configuration - point to Nuxt directory? (default repo root)
-// TODO: add package resolutions for nuxt nightly versions
-// TODO: dedupe dependencies
-// TODO: create a long-running branch
-// TODO: open a PR
 const octokit = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN);
 const base = (0, core_1.getInput)('base') || (0, node_child_process_1.execSync)('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
 const head = (0, core_1.getInput)('head');
+const root = (0, core_1.getInput)('root') || process.cwd();
 try {
     (0, node_child_process_1.execSync)(`git checkout ${head}`);
-    (0, core_1.info)(`Checking out existing branch ${head}`);
+    (0, core_1.info)(`Checking out existing branch ${head} and discarding commits`);
+    (0, node_child_process_1.execSync)(`git reset --hard origin/${base}`);
 }
 catch (e) {
     (0, core_1.info)(`Creating new branch ${head}`);
@@ -30823,7 +30820,13 @@ catch (e) {
 }
 (0, node_child_process_1.execSync)('git config --global user.email "nuxtbot@roe.dev"');
 (0, node_child_process_1.execSync)('git config --global user.name "🤖 Nuxtbot"');
-(0, node_child_process_1.execSync)('npx nuxi@latest upgrade --force');
+// Upgrade Nuxt packages
+(0, node_child_process_1.execSync)('npx @antfu/ni -D nuxt@npm:nuxt-nightly@latest', { cwd: root });
+(0, node_child_process_1.execSync)('npx @antfu/ni -D @nuxt/kit@npm:@nuxt/kit-nightly@latest', { cwd: root });
+(0, node_child_process_1.execSync)('npx @antfu/ni -D @nuxt/schema@npm:@nuxt/schema-nightly@latest', { cwd: root });
+(0, node_child_process_1.execSync)('npx @antfu/ni -D @nuxt/vite-builder@npm:@nuxt/vite-builder-nightly@latest', { cwd: root });
+// TODO: dedupe dependencies
+// TODO: add package resolutions for nuxt nightly versions
 (0, node_child_process_1.execSync)('git commit -am "chore: upgrade nuxt"');
 (0, node_child_process_1.execSync)(`git push -u origin ${head}`);
 octokit.rest.pulls.create({

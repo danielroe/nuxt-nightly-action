@@ -3,20 +3,17 @@ import { execSync } from 'node:child_process'
 import { getInput, info, warning } from '@actions/core'
 import { context, getOctokit } from '@actions/github'
 
-// TODO: configuration - point to Nuxt directory? (default repo root)
-// TODO: add package resolutions for nuxt nightly versions
-// TODO: dedupe dependencies
-// TODO: create a long-running branch
-// TODO: open a PR
-
 const octokit = getOctokit(process.env.GITHUB_TOKEN)
 
 const base = getInput('base') || execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim()
 const head = getInput('head')
 
+const root = getInput('root') || process.cwd()
+
 try {
   execSync(`git checkout ${head}`)
-  info(`Checking out existing branch ${head}`)
+  info(`Checking out existing branch ${head} and discarding commits`)
+  execSync(`git reset --hard origin/${base}`)
 } catch (e) {
   info(`Creating new branch ${head}`)
   execSync(`git checkout -b ${head}`)
@@ -25,7 +22,15 @@ try {
 execSync('git config --global user.email "nuxtbot@roe.dev"')
 execSync('git config --global user.name "🤖 Nuxtbot"')
 
-execSync('npx nuxi@latest upgrade --force')
+// Upgrade Nuxt packages
+execSync('npx @antfu/ni -D nuxt@npm:nuxt-nightly@latest', { cwd: root })
+execSync('npx @antfu/ni -D @nuxt/kit@npm:@nuxt/kit-nightly@latest', { cwd: root })
+execSync('npx @antfu/ni -D @nuxt/schema@npm:@nuxt/schema-nightly@latest', { cwd: root })
+execSync('npx @antfu/ni -D @nuxt/vite-builder@npm:@nuxt/vite-builder-nightly@latest', { cwd: root })
+
+// TODO: dedupe dependencies
+// TODO: add package resolutions for nuxt nightly versions
+
 execSync('git commit -am "chore: upgrade nuxt"')
 execSync(`git push -u origin ${head}`)
 

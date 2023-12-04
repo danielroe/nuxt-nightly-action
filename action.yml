@@ -9,9 +9,14 @@ branding:
 
 inputs:
   base:
+    description: The base branch to raise the PR against.
     required: false
   head:
+    description: The name of the branch to create with the changes.
     default: ci/nuxt-nightly
+  root:
+    description: The directory containing your Nuxt project.
+    default: .
 
 runs:
   using: node20
