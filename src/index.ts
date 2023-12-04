@@ -22,6 +22,9 @@ try {
   execSync(`git checkout -b ${head}`)
 }
 
+execSync('git config --global user.email "nuxtbot@roe.dev"')
+execSync('git config --global user.name "🤖 Nuxtbot"')
+
 execSync('npx nuxi@latest upgrade --force')
 execSync('git commit -am "chore: upgrade nuxt"')
 execSync(`git push -u origin ${head}`)

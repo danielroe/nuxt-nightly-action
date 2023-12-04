@@ -30821,6 +30821,8 @@ catch (e) {
     (0, core_1.info)(`Creating new branch ${head}`);
     (0, node_child_process_1.execSync)(`git checkout -b ${head}`);
 }
+(0, node_child_process_1.execSync)('git config --global user.email "nuxtbot@roe.dev"');
+(0, node_child_process_1.execSync)('git config --global user.name "🤖 Nuxtbot"');
 (0, node_child_process_1.execSync)('npx nuxi@latest upgrade --force');
 (0, node_child_process_1.execSync)('git commit -am "chore: upgrade nuxt"');
 (0, node_child_process_1.execSync)(`git push -u origin ${head}`);
