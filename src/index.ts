@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process'
 
 import { getInput, info, warning } from '@actions/core'
-import github from '@actions/github'
+import { context, getOctokit } from '@actions/github'
 
 // TODO: configuration - point to Nuxt directory? (default repo root)
 // TODO: add package resolutions for nuxt nightly versions
@@ -9,7 +9,7 @@ import github from '@actions/github'
 // TODO: create a long-running branch
 // TODO: open a PR
 
-const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+const octokit = getOctokit(process.env.GITHUB_TOKEN)
 
 const base = getInput('base') || execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim()
 const head = getInput('head')
@@ -29,7 +29,7 @@ execSync(`git push -u origin ${head}`)
 octokit.rest.pulls.create({
   base,
   head,
-  owner: github.context.repo.owner,
-  repo: github.context.repo.repo,
+  owner: context.repo.owner,
+  repo: context.repo.repo,
   draft: true,
 })

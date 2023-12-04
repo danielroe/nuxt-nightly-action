@@ -28906,48 +28906,6 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 2694:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const node_child_process_1 = __nccwpck_require__(7718);
-const core_1 = __nccwpck_require__(9093);
-const github_1 = __importDefault(__nccwpck_require__(5942));
-// TODO: configuration - point to Nuxt directory? (default repo root)
-// TODO: add package resolutions for nuxt nightly versions
-// TODO: dedupe dependencies
-// TODO: create a long-running branch
-// TODO: open a PR
-const octokit = github_1.default.getOctokit(process.env.GITHUB_TOKEN);
-const base = (0, core_1.getInput)('base') || (0, node_child_process_1.execSync)('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
-const head = (0, core_1.getInput)('head');
-try {
-    (0, node_child_process_1.execSync)(`git checkout ${head}`);
-    (0, core_1.info)(`Checking out existing branch ${head}`);
-}
-catch (e) {
-    (0, core_1.info)(`Creating new branch ${head}`);
-    (0, node_child_process_1.execSync)(`git checkout -b ${head}`);
-}
-(0, node_child_process_1.execSync)('npx nuxi@latest upgrade --force');
-(0, node_child_process_1.execSync)('git commit -am "chore: upgrade nuxt"');
-(0, node_child_process_1.execSync)(`git push -u origin ${head}`);
-octokit.rest.pulls.create({
-    base,
-    head,
-    owner: github_1.default.context.repo.owner,
-    repo: github_1.default.context.repo.repo,
-    draft: true,
-});
-
-
-/***/ }),
-
 /***/ 9491:
 /***/ ((module) => {
 
@@ -30837,12 +30795,45 @@ module.exports = parseParams
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(2694);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const node_child_process_1 = __nccwpck_require__(7718);
+const core_1 = __nccwpck_require__(9093);
+const github_1 = __nccwpck_require__(5942);
+// TODO: configuration - point to Nuxt directory? (default repo root)
+// TODO: add package resolutions for nuxt nightly versions
+// TODO: dedupe dependencies
+// TODO: create a long-running branch
+// TODO: open a PR
+const octokit = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN);
+const base = (0, core_1.getInput)('base') || (0, node_child_process_1.execSync)('git rev-parse --abbrev-ref HEAD', { encoding: 'utf-8' }).trim();
+const head = (0, core_1.getInput)('head');
+try {
+    (0, node_child_process_1.execSync)(`git checkout ${head}`);
+    (0, core_1.info)(`Checking out existing branch ${head}`);
+}
+catch (e) {
+    (0, core_1.info)(`Creating new branch ${head}`);
+    (0, node_child_process_1.execSync)(`git checkout -b ${head}`);
+}
+(0, node_child_process_1.execSync)('npx nuxi@latest upgrade --force');
+(0, node_child_process_1.execSync)('git commit -am "chore: upgrade nuxt"');
+(0, node_child_process_1.execSync)(`git push -u origin ${head}`);
+octokit.rest.pulls.create({
+    base,
+    head,
+    owner: github_1.context.repo.owner,
+    repo: github_1.context.repo.repo,
+    draft: true,
+});
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
