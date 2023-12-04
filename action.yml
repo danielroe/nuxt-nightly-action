@@ -7,6 +7,11 @@ branding:
   icon: 'moon'
   color: 'black'
 
+inputs:
+  base:
+  head:
+    default: ci/nuxt-nightly
+
 runs:
   using: node20
   main: dist/index.js
