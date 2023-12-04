@@ -1,0 +1,11 @@
+name: 'Nuxt Nightly'
+description: 'An action to test a repository against the latest nightly build of Nuxt'
+author: 'Daniel Roe'
+
+# Add your action's branding here. This will appear on the GitHub Marketplace.
+branding:
+  icon: 'moon'
+
+runs:
+  using: node20
+  main: dist/index.js
