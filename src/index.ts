@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process'
 
-import { getInput } from '@actions/core'
+import { getInput, info, warning } from '@actions/core'
 import github from '@actions/github'
 
 // TODO: configuration - point to Nuxt directory? (default repo root)
@@ -16,7 +16,9 @@ const head = getInput('head')
 
 try {
   execSync(`git checkout ${head}`)
-} catch {
+  info(`Checking out existing branch ${head}`)
+} catch (e) {
+  info(`Creating new branch ${head}`)
   execSync(`git checkout -b ${head}`)
 }
 
