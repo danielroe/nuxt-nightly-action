@@ -1,6 +1,6 @@
 {
   "name": "nuxt-nightly-action",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "An action to test a repository against the latest nightly build of Nuxt.",
   "main": "dist/index.js",
   "scripts": {
